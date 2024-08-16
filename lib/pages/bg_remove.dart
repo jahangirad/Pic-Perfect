@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pic_perfect/widgets/custom_appbar.dart';
+import '../controller/bg_remove_controller.dart';
 import '../controller/color_picker_controller.dart';
 import '../controller/image_picker_controller.dart';
 import '../utils/colors_code.dart';
@@ -22,6 +24,7 @@ class _BgRemoveState extends State<BgRemove> {
 
   final ColorPickerController getColor = Get.put(ColorPickerController());
   final ImagePickerController getImage = Get.put(ImagePickerController());
+  final BgRemoveController bgAll = Get.put(BgRemoveController());
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +54,19 @@ class _BgRemoveState extends State<BgRemove> {
                 },
                   child: CustomContainer("Pick Color", 16.0, FontWeight.w400)
               ),
+              GestureDetector(
+                onTap: (){
+                  getImage.pickImage();
+                },
+                  child: CustomContainer("Img", 16.0, FontWeight.w400)
+              ),
               SizedBox(height: Get.height * .02,),
               GestureDetector(
                   onTap: (){
-                    getImage.pickImage();
-                    //Get.toNamed("BgRemoveDownload");
+                    bgAll.removeBackgroundWithColor();
+                    Timer(Duration(seconds: 10), (){
+                      Get.toNamed("BgRemoveDownload");
+                    });
                   },
                   child: CustomContainer("Submit", 16.0, FontWeight.w400)
               ),

@@ -1,12 +1,21 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controller/bg_download_controller.dart';
+import '../controller/bg_remove_controller.dart';
+import '../utils/colors_code.dart';
+import '../utils/images.dart';
 import '../widgets/custom_appbar.dart';
 import '../widgets/custom_container.dart';
 
 
 
 class BgRemoveDownload extends StatelessWidget {
-  const BgRemoveDownload({super.key});
+  BgRemoveDownload({super.key});
+
+  BgRemoveController bgRemoveDownload = Get.put(BgRemoveController());
+  BgDownloadController bgDownload = Get.put(BgDownloadController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +27,25 @@ class BgRemoveDownload extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              CustomContainerP(),
+          Container(
+          height: Get.height * .4,
+            width: Get.width * .7,
+            decoration: BoxDecoration(
+                border: Border.all(width: 2, color: ColorsCode.container_color),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                image: DecorationImage(
+                    image: bgRemoveDownload.processedImage != null
+                        ? MemoryImage(bgRemoveDownload.processedImage!)
+                        : AssetImage(ImageForApp.app_icon),
+                    fit: BoxFit.cover
+                )
+            ),
+          ),
               SizedBox(height: Get.height * .05,),
               GestureDetector(
-                  onTap: (){},
+                  onTap: (){
+                    bgDownload.downloadImage();
+                  },
                   child: CustomContainer("Download", 16.0, FontWeight.w400)
               ),
             ],

@@ -7,8 +7,10 @@ import 'package:get/get.dart';
 
 class ColorPickerController extends GetxController {
   Color _color = Colors.blue; // Default color
+  String _hexColor = '#0000FF'; // Default HEX color
 
   Color get color => _color; // Getter to access the color outside the controller
+  String get hexColor => _hexColor; // Getter to access the HEX color
 
   Future<void> pickColor(BuildContext context) async {
     Color color = await showColorPickerDialog(
@@ -27,7 +29,9 @@ class ColorPickerController extends GetxController {
     );
 
     _color = color;
+    _hexColor = '#${_color.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}'; // Convert to HEX
     update(); // Notify the listeners to rebuild the UI
-    print('#${_color.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}');
+
+    print(_hexColor); // Print the HEX color
   }
 }
