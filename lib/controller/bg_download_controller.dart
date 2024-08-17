@@ -9,11 +9,14 @@ import 'bg_remove_controller.dart';
 
 
 class BgDownloadController extends GetxController {
-
   final BgRemoveController bgRemoveController = Get.find<BgRemoveController>();
+
+  var isLoading = false.obs; // Observable to track loading state
 
   Future<void> downloadImage() async {
     try {
+      isLoading(true); // Start loading
+
       // Temporary directory path
       final directory = await getTemporaryDirectory();
       final imagePath = '${directory.path}/downloaded_image.png';
@@ -31,6 +34,8 @@ class BgDownloadController extends GetxController {
       Get.snackbar('Error', 'Failed to download image',
           snackPosition: SnackPosition.BOTTOM);
       print(e);
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 }
