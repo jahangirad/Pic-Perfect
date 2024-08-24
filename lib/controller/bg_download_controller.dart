@@ -1,15 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
-import 'bg_remove_controller.dart';
-
-
-
+import 'package:pic_perfect/controller/bg_remove_controller.dart';
 
 class BgDownloadController extends GetxController {
-  final BgRemoveController bgRemoveController = Get.find<BgRemoveController>();
+  final BgRemoveController bgRemoveController = Get.put(BgRemoveController());
 
   var isLoading = false.obs; // Observable to track loading state
 
@@ -17,22 +12,31 @@ class BgDownloadController extends GetxController {
     try {
       isLoading(true); // Start loading
 
-      // Temporary directory path
-      final directory = await getTemporaryDirectory();
+      // Get the download directory path
+      final directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      // Create the file path in the download directory
       final imagePath = '${directory.path}/downloaded_image.png';
       final imageFile = File(imagePath);
 
-      // Write image data to file
+      // Write image data to the file
       await imageFile.writeAsBytes(bgRemoveController.processedImage as Uint8List);
 
-      // Save to gallery
-      await GallerySaver.saveImage(imageFile.path);
-
-      Get.snackbar('Success', 'Image downloaded to gallery',
-          snackPosition: SnackPosition.BOTTOM);
+      // Provide feedback to the user
+      Get.snackbar(
+        'Success',
+        'Image downloaded to Download directory',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } catch (e) {
-      Get.snackbar('Error', 'Failed to download image',
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        'Error',
+        'Failed to download image',
+        snackPosition: SnackPosition.BOTTOM,
+      );
       print(e);
     } finally {
       isLoading(false); // Stop loading
